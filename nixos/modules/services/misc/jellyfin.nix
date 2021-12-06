@@ -40,6 +40,22 @@ in
           only be used if they are unchanged.
         '';
       };
+
+      privateDevices = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Deny access to physical devices. Defaults to true. Setting this to false is useful to enable hardware acceleration.  
+        '';
+      };
+
+      renderDevice = mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          File path to deviced used for hardware acceleration. For example /dev/dri/renderD128.  
+        '';
+      };
     };
   };
 
@@ -65,12 +81,12 @@ in
         CapabilityBoundingSet = "";
 
         # ProtectClock= adds DeviceAllow=char-rtc r
-        DeviceAllow = "";
+        DeviceAllow = "${cfg.renderDevice}";
 
         LockPersonality = true;
 
         PrivateTmp = true;
-        PrivateDevices = true;
+        PrivateDevices = cfg.privateDevices;
         PrivateUsers = true;
 
         ProtectClock = true;
